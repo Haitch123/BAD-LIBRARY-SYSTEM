@@ -6,8 +6,6 @@ import java.util.Random;
 
 public class Account {
     private final String Account_id;
-    String username;
-    private String Password;
     String Name;
     private String E_mail;
     private String Phone_Number;
@@ -16,13 +14,11 @@ public class Account {
     HashMap<String, String> username_Password=new HashMap<>();
     public Account(String Name, String username, String Password, String E_mail, String Phone_Number, String Address) {
         this.Name = Name;
-        this.username=username;
-        this.Password=Password;
         this.E_mail = E_mail;
         this.Phone_Number = Phone_Number;
         this.Address = Address;
         this.Account_id = Id_Generator();
-        Add_Hash_Map(username,Password);
+        username_Password.put(username,Password);
     }
 
     String Id_Generator() {
@@ -36,7 +32,6 @@ public class Account {
            if( username_Password.get(username).equals(Password)){
                System.out.println("Logged in successfully");
                IsLoggedIn=true;
-
            }
            else{
                System.out.println("Invalid Password");
@@ -48,9 +43,6 @@ public class Account {
     }
     public void LoggOut(){
         IsLoggedIn=false;
-    }
-    void Add_Hash_Map(String username,String Password){
-        username_Password.put(username,Password);
     }
         public void setE_mail (String e_mail){
         if(IsLoggedIn) {
@@ -99,14 +91,12 @@ public class Account {
                 return "Logged Out";
             }
     }
-    public String getPassword () {
-        return Password;
-    }
-   public void Change_Password(String Current_Password,String Changed_Password){
+
+   public void Change_Password(String username,String Current_Password,String Changed_Password){
         if(IsLoggedIn){
             if(Current_Password.equals(username_Password.get(username))){
-                Password=Changed_Password;
                 username_Password.replace(username,Changed_Password);
+                System.out.println("Password Changed Successfully");
             }
             else{
                 System.out.println("Incorrect Password");
