@@ -1,6 +1,9 @@
 package Librarycatalog.classes;
 
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -12,13 +15,14 @@ public class Account {
     private String Address;
     public boolean IsLoggedIn = false;
     HashMap<String, String> username_Password=new HashMap<>();
-    public Account(String Name, String username, String Password, String E_mail, String Phone_Number, String Address) {
+    public Account(String Name, String username, String Password, String E_mail, String Phone_Number, String Address, BufferedWriter Writer) throws IOException {
         this.Name = Name;
         this.E_mail = E_mail;
         this.Phone_Number = Phone_Number;
         this.Address = Address;
         this.Account_id = Id_Generator();
         username_Password.put(username,Password);
+        Writer.write("Username & Password: " + username_Password+ "\n"  + "Name: "+ Name + "\n" + "E_mail: " + E_mail + "\n" + "Phone Number: " + Phone_Number + "\n" + "Address: " + Address+ "\n");
     }
 
     String Id_Generator() {
@@ -26,20 +30,33 @@ public class Account {
         return String.format("%06d", Id.nextInt(1000000));
     }
 
-    public void LoggIn(String username, String Password) {
-        if (username_Password.containsKey(username)){
-           username_Password.get(username);
-           if( username_Password.get(username).equals(Password)){
-               System.out.println("Logged in successfully");
-               IsLoggedIn=true;
-           }
-           else{
-               System.out.println("Invalid Password");
-           }
+    public void LoggIn(String username, String Password, BufferedReader Reader) throws IOException {
+        String Tempuser;
+
+        while((Tempuser=Reader.readLine())!=null){
+            if(Tempuser.startsWith("Username & Password: ")){
+                Tempuser=Tempuser.substring("Username & Password: ".length());
+                String[] Parts = Tempuser.split("=");
+
+                if(Parts[0].replace("{","").trim().equals(username)){
+                    if(Parts[1].replace("}","").trim().equals(Password)){
+                        System.out.println("Logged in successfully");
+                        IsLoggedIn=true;
+
+
+                    }
+                    else{
+                        System.out.println("Invalid Password");
+                    }
+
+                }
+            }
+
         }
-        else{
+          if(!IsLoggedIn){
             System.out.println("User Not Found");
         }
+
     }
     public void LoggOut(){
         IsLoggedIn=false;
