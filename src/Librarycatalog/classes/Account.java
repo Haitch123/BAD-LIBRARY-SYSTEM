@@ -1,6 +1,4 @@
 package Librarycatalog.classes;
-
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -15,7 +13,7 @@ public class Account {
     private String Address;
     public boolean IsLoggedIn = false;
     HashMap<String, String> username_Password=new HashMap<>();
-    public Account(String Name, String username, String Password, String E_mail, String Phone_Number, String Address, BufferedWriter Writer,BufferedReader Reader) throws IOException {
+    public void SignUp(String Name, String username, String Password, String E_mail, String Phone_Number, String Address, BufferedWriter Writer,BufferedReader Reader) throws IOException {//(sign up)
 
         boolean UserExist=false;
         String Check;
@@ -54,7 +52,6 @@ public class Account {
             if(Tempuser.startsWith("Username & Password: ")){
                 Tempuser=Tempuser.substring("Username & Password: ".length());
                 String[] Parts = Tempuser.split("=");
-
                 if(Parts[0].replace("{","").trim().equals(username)){
                     if(Parts[1].replace("}","").trim().equals(Password)){
                         System.out.println("Logged in successfully");
