@@ -8,21 +8,38 @@ import java.util.HashMap;
 import java.util.Random;
 
 public class Account {
-    private final String Account_id;
+    private  String Account_id;
     String Name;
     private String E_mail;
     private String Phone_Number;
     private String Address;
     public boolean IsLoggedIn = false;
     HashMap<String, String> username_Password=new HashMap<>();
-    public Account(String Name, String username, String Password, String E_mail, String Phone_Number, String Address, BufferedWriter Writer) throws IOException {
-        this.Name = Name;
-        this.E_mail = E_mail;
-        this.Phone_Number = Phone_Number;
-        this.Address = Address;
-        this.Account_id = Id_Generator();
-        username_Password.put(username,Password);
-        Writer.write("Username & Password: " + username_Password+ "\n"  + "Name: "+ Name + "\n" + "E_mail: " + E_mail + "\n" + "Phone Number: " + Phone_Number + "\n" + "Address: " + Address+ "\n");
+    public Account(String Name, String username, String Password, String E_mail, String Phone_Number, String Address, BufferedWriter Writer,BufferedReader Reader) throws IOException {
+
+        boolean UserExist=false;
+        String Check;
+        while((Check=Reader.readLine())!=null) {
+            if (Check.startsWith("Username & Password: ")) {
+                Check = Check.substring("Username & Password: ".length());
+                String[] user=Check.split("=");
+                if(user[0].replace("{","").trim().equals(username)){
+                    System.out.println("User Already Exists");
+                    UserExist=true;
+                    break;
+                }
+
+            }
+        }
+        if(!UserExist) {
+            this.Name = Name;
+            this.E_mail = E_mail;
+            this.Phone_Number = Phone_Number;
+            this.Address = Address;
+            this.Account_id = Id_Generator();
+            username_Password.put(username, Password);
+            Writer.write("Username & Password: " + username_Password + "\n" + "Name: " + Name + "\n" + "E_mail: " + E_mail + "\n" + "Phone Number: " + Phone_Number + "\n" + "Address: " + Address + "\n");
+        }
     }
 
     String Id_Generator() {

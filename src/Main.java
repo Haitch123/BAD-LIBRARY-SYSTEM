@@ -20,7 +20,8 @@ public class Main {
         Account user22;
         BufferedWriter Writer=new BufferedWriter(new FileWriter("User Details.txt",true));
         try {
-            user22 = new Account(name2,user2,pass2,email2,phone2,address2,Writer);
+            BufferedReader Reader2=new BufferedReader(new FileReader("User Details.txt"));
+            user22 = new Account(name2,user2,pass2,email2,phone2,address2,Writer,Reader2);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
