@@ -4,75 +4,44 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Random;
-
+import java.util.Scanner;
 public class Account {
-    private  String Account_id;
+    private final String Account_id;
+    private String Username;
+    private String Password;
     String Name;
     private String E_mail;
     private String Phone_Number;
     private String Address;
     public boolean IsLoggedIn = false;
-    HashMap<String, String> username_Password=new HashMap<>();
-    public void SignUp(String Name, String username, String Password, String E_mail, String Phone_Number, String Address, BufferedWriter Writer,BufferedReader Reader) throws IOException {//(sign up)
-
-        boolean UserExist=false;
-        String Check;
-        while((Check=Reader.readLine())!=null) {
-            if (Check.startsWith("Username & Password: ")) {
-                Check = Check.substring("Username & Password: ".length());
-                String[] user=Check.split("=");
-                if(user[0].replace("{","").trim().equals(username)){
-                    System.out.println("User Already Exists");
-                    UserExist=true;
-                    break;
-                }
-
-            }
-        }
-        if(!UserExist) {
+    public static int UsersNom=0;
+    public Account(String Username,String Password,String Name,String E_mail, String Phone_Number, String Address)  {
+           this.Username=Username;
+            this.Password=Password;
             this.Name = Name;
             this.E_mail = E_mail;
             this.Phone_Number = Phone_Number;
             this.Address = Address;
             this.Account_id = Id_Generator();
-            username_Password.put(username, Password);
-            Writer.write("Username & Password: " + username_Password + "\n" + "Name: " + Name + "\n" + "E_mail: " + E_mail + "\n" + "Phone Number: " + Phone_Number + "\n" + "Address: " + Address + "\n");
+            UsersNom++;
         }
-    }
 
     String Id_Generator() {
         Random Id = new Random();
         return String.format("%06d", Id.nextInt(1000000));
     }
 
-    public void LoggIn(String username, String Password, BufferedReader Reader) throws IOException {
-        String Tempuser;
-
-        while((Tempuser=Reader.readLine())!=null){
-            if(Tempuser.startsWith("Username & Password: ")){
-                Tempuser=Tempuser.substring("Username & Password: ".length());
-                String[] Parts = Tempuser.split("=");
-                if(Parts[0].replace("{","").trim().equals(username)){
-                    if(Parts[1].replace("}","").trim().equals(Password)){
-                        System.out.println("Logged in successfully");
-                        IsLoggedIn=true;
-
-
-                    }
-                    else{
-                        System.out.println("Invalid Password");
-                    }
-
-                }
-            }
-
+    public void LoggIn(String Username, String Password) {
+        if(this.Username.equals(Username) && this.Password.equals(Password)){
+            System.out.println("Logged In Successfully");
+            IsLoggedIn=true;
         }
-          if(!IsLoggedIn){
-            System.out.println("User Not Found");
+        else{
+            System.out.println("Incorrect Username or Password");
         }
-
     }
-    public void LoggOut(){
+
+    public void LogOut(){
         IsLoggedIn=false;
     }
         public void setE_mail (String e_mail){
@@ -98,6 +67,30 @@ public class Account {
                 return "Logged Out";
             }
     }
+    public String getUsername () {
+        if(IsLoggedIn) {
+            return Username;
+        }
+        else{
+            return "Logged Out";
+        }
+    }
+    public String getPassword () {
+        if(IsLoggedIn) {
+            return Password;
+        }
+        else{
+            return "Logged Out";
+        }
+    }
+    public String getName () {
+        if(IsLoggedIn) {
+            return Name;
+        }
+        else{
+            return "Logged Out";
+        }
+    }
         public String getE_mail () {
             if(IsLoggedIn) {
                 return E_mail;
@@ -122,18 +115,41 @@ public class Account {
                 return "Logged Out";
             }
     }
+    Scanner Input = new Scanner(System.in);
+   public void Change_Password(String Current_Password,String Changed_Password) {
 
-   public void Change_Password(String username,String Current_Password,String Changed_Password){
-        if(IsLoggedIn){
-            if(Current_Password.equals(username_Password.get(username))){
-                username_Password.replace(username,Changed_Password);
-                System.out.println("Password Changed Successfully");
-            }
-            else{
-                System.out.println("Incorrect Password");
-            }
-
-        }
-    }
-
+       int Try_Counter = 1;
+       if (IsLoggedIn) {
+       while (Try_Counter <= 4) {
+               if (this.Password.equals(Current_Password)) {
+                   this.Password=Changed_Password;
+                   System.out.println("Password Changed Successfully");
+                   break;
+               } else {
+                   System.out.println("Incorrect Password");
+                   Try_Counter++;
+                   System.out.println("1-Try Again"+"\n"+"2-Exit");
+                   int Choice=Input.nextInt();
+                   switch (Choice){
+                       case 1:{Input.nextLine();
+                              System.out.println("Enter Current Password:");
+                              Current_Password = Input.nextLine();
+                              System.out.println("Enter New Password:");
+                              Changed_Password= Input.nextLine();
+                               break;
+                       }
+                       case 2: {
+                           return;
+                       }
+                   }
+               }
+           }
+       if (Try_Counter == 5) {
+           LogOut();
+           System.out.println("You Are Logged Out");
+           }
+       }
+   }
 }
+
+

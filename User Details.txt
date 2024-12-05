@@ -1,11 +1,2 @@
-Username & Password: {Zaki=5}
-Name: Hesham
-E_mail: 7000
-Phone Number: 222
-Address: 100-street
-
-Username & Password: {Ahmed=5}
-Name: Hesham
-E_mail: 7000
-Phone Number: 222
-Address: 100-street
+Haitch,2,Ahmed,@,111,5-street
+Hesham,5,Zaki,ahm,222,10-street
