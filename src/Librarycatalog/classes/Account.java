@@ -2,33 +2,40 @@ package Librarycatalog.classes;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.Scanner;
-public class Account {
-    private final String Account_id;
+public class Account implements Serializable {
+    private final String Account_Id;
     private String Username;
     private String Password;
-    String Name;
+    private String Name;
     private String E_mail;
     private String Phone_Number;
     private String Address;
-    public boolean IsLoggedIn = false;
-    public static int UsersNom=0;
-    public Account(String Username,String Password,String Name,String E_mail, String Phone_Number, String Address)  {
-           this.Username=Username;
-            this.Password=Password;
+    private boolean IsLoggedIn = false;
+    public String Account_Type;
+    public static int NomOfUsers=0;
+    public Account(String Username,String Password,String Name,String E_mail, String Phone_Number, String Address,ArrayList<Account>Accounts)  {
+            this.Username = Username;
+            this.Password = Password;
             this.Name = Name;
             this.E_mail = E_mail;
             this.Phone_Number = Phone_Number;
             this.Address = Address;
-            this.Account_id = Id_Generator();
-            UsersNom++;
+            Account_Id = Id_Generator(Accounts);
+            NomOfUsers++;
         }
 
-    String Id_Generator() {
-        Random Id = new Random();
-        return String.format("%06d", Id.nextInt(1000000));
+    String Id_Generator(ArrayList<Account> Accounts) {
+        String TempAccountId;
+        do {
+            Random Id = new Random();
+            TempAccountId=String.format("%06d", Id.nextInt(1000000));
+        }while(UniqueAccount_Id(TempAccountId,Accounts));
+        return TempAccountId;
     }
 
     public void LoggIn(String Username, String Password) {
@@ -43,6 +50,11 @@ public class Account {
 
     public void LogOut(){
         IsLoggedIn=false;
+    }
+    public void setUsername (String username){
+        if(IsLoggedIn) {
+            Username = username;
+        }
     }
         public void setE_mail (String e_mail){
         if(IsLoggedIn) {
@@ -59,72 +71,38 @@ public class Account {
                 Address = address;
             }
     }
-        public String getAccount_id () {
-            if(IsLoggedIn) {
-                return Account_id;
-            }
-            else{
-                return "Logged Out";
-            }
-    }
     public String getUsername () {
-        if(IsLoggedIn) {
-            return Username;
-        }
-        else{
-            return "Logged Out";
-        }
+        return Username;
     }
     public String getPassword () {
-        if(IsLoggedIn) {
-            return Password;
-        }
-        else{
-            return "Logged Out";
-        }
+        return Password;
     }
     public String getName () {
-        if(IsLoggedIn) {
-            return Name;
-        }
-        else{
-            return "Logged Out";
-        }
+        return Name;
     }
         public String getE_mail () {
-            if(IsLoggedIn) {
-                return E_mail;
-            }
-            else{
-                return "Logged Out";
-            }
+          return E_mail;
     }
         public String getPhone_Number () {
-            if(IsLoggedIn) {
-                return Phone_Number;
-            }
-            else{
-                return "Logged Out";
-            }
+          return Phone_Number;
     }
         public String getAddress () {
-            if(IsLoggedIn) {
-                return Address;
-            }
-            else{
-                return "Logged Out";
-            }
+         return Address;
     }
-    Scanner Input = new Scanner(System.in);
+    public String getAccount_Id () {
+        return Account_Id;
+    }
    public void Change_Password(String Current_Password,String Changed_Password) {
-
+       Scanner Input = new Scanner(System.in);
        int Try_Counter = 1;
        if (IsLoggedIn) {
        while (Try_Counter <= 4) {
                if (this.Password.equals(Current_Password)) {
-                   this.Password=Changed_Password;
-                   System.out.println("Password Changed Successfully");
-                   break;
+                   if(UniquePassword(Changed_Password)) {
+                       this.Password = Changed_Password;
+                       System.out.println("Password Changed Successfully");
+                       break;
+                   }
                } else {
                    System.out.println("Incorrect Password");
                    Try_Counter++;
@@ -149,6 +127,49 @@ public class Account {
            System.out.println("You Are Logged Out");
            }
        }
+   }
+   public void Display_Details(){
+        if(IsLoggedIn){
+            System.out.println(Username);
+            System.out.println(Name);
+            System.out.println(E_mail);
+            System.out.println(Phone_Number);
+            System.out.println(Address);
+        }
+   }
+   public void Change_Username( String NewUsername,ArrayList<Account>Accounts){
+        if(!Check_Username_Exists(NewUsername,Accounts)){
+            setUsername(NewUsername);
+            System.out.println("Username Changed Successfully");
+        }
+   }
+   boolean Check_Username_Exists(String NewUsername,ArrayList<Account> Accounts){
+        boolean Exists=false;
+       for (Account account : Accounts) {
+           if (NewUsername.equals(account.getUsername())) {
+               Exists = true;
+               System.out.println("Username Already Exists");
+               break;
+           }
+       }
+        return Exists;
+   }
+   public boolean UniquePassword(String Password)throws PasswordException{
+        if(Password.length()>=8 && Password.matches(".*[!@#$%&*].*") && Password.matches(".*[a-z].*") && Password.matches(".*[A-Z].*")){
+            return true;
+        }
+        else{
+            throw new PasswordException();
+        }
+   }
+   public boolean UniqueAccount_Id(String TempAccountId,ArrayList<Account> Accounts){
+
+        for(Account account:Accounts){
+            if(account.getAccount_Id().equals(TempAccountId)){
+                return true;
+            }
+        }
+        return false;
    }
 }
 
