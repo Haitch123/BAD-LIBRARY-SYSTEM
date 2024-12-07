@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.Scanner;
-public class Account implements Serializable {
+public abstract class Account implements Serializable {
     private final String Account_Id;
     private String Username;
     private String Password;
@@ -20,7 +20,9 @@ public class Account implements Serializable {
     public static int NomOfUsers=0;
     public Account(String Username,String Password,String Name,String E_mail, String Phone_Number, String Address,ArrayList<Account>Accounts)  {
             this.Username = Username;
-            this.Password = Password;
+            if(UniquePassword(Password)) {
+                this.Password = Password;
+            }
             this.Name = Name;
             this.E_mail = E_mail;
             this.Phone_Number = Phone_Number;
@@ -50,6 +52,7 @@ public class Account implements Serializable {
 
     public void LogOut(){
         IsLoggedIn=false;
+        System.out.println("Logged Out Successfully");
     }
     public void setUsername (String username){
         if(IsLoggedIn) {
@@ -170,6 +173,18 @@ public class Account implements Serializable {
             }
         }
         return false;
+   }
+   public void DeleteAccount(ArrayList<Account> Accounts,String Password) {
+       if (IsLoggedIn) {
+           if (Password.equals(this.Password)) {
+               for (Account account : Accounts) {
+                   if (Password.equals(account.getPassword())) {
+                       Accounts.remove(account);
+                       System.out.println("Account Deleted Successfully");
+                   }
+               }
+           }
+       }
    }
 }
 

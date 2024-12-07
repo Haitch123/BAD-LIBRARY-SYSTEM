@@ -1,4 +1,5 @@
 import Librarycatalog.classes.Account;
+import Librarycatalog.classes.Administrator;
 import Librarycatalog.classes.PasswordException;
 
 import java.io.*;
@@ -37,18 +38,21 @@ public class Main {
     }
     public static void main(String[] args) throws IOException {
         ArrayList<Account> Accounts=new ArrayList<>();
-        ReadingData(Accounts);
-       /* Account User1=new Account("ahmed1","Hesh5100001!","@","111","1","1",Accounts);
+        //ReadingData(Accounts);
+        Account User1=new Account("ahmed1","Hesh5100001!","@","111","1","1",Accounts);
         Account User2=new Account("ahmed2","Hesh5188881@","@","111","1","1",Accounts);
         Account User3=new Account("ahmed3","Hesh5154441@","@","111","1","1",Accounts);
         Account User4=new Account("ahmed4","Hesh516712@","@","111","1","1",Accounts);
         Accounts.add(User1);
         Accounts.add(User2);
         Accounts.add(User3);
-        Accounts.add(User4);*/
+        Accounts.add(User4);
         Accounts.get(0).LoggIn("ahmed1","Hesh5100001!");
+        Accounts.get(0).Display_Details();
 
         Accounts.get(0).Display_Details();
+
+
         /*for(Account account:Accounts) {
             System.out.println(account.getAccount_Id());
         }
