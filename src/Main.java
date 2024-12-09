@@ -1,5 +1,6 @@
 import Librarycatalog.classes.Account;
 import Librarycatalog.classes.Administrator;
+import Librarycatalog.classes.Book;
 import Librarycatalog.classes.PasswordException;
 
 import java.io.*;
@@ -37,7 +38,36 @@ public class Main {
         }
     }
     public static void main(String[] args) throws IOException {
-        ArrayList<Account> Accounts=new ArrayList<>();
+        ArrayList<Book> Books=new ArrayList();
+        Administrator Admin1=new Administrator("ahmed1","Hesh5100001!","@","111","1","1");
+        Book Book1=new Book("01","The Great Gatspy","Ahmed",2024,"Sci Fi",true,100F);
+        Admin1.Add_Book(Books,Book1);
+        System.out.println(Books.indexOf(Book1));
+        Admin1.Remove_Book(Books,Book1);
+        System.out.println(Books.indexOf(Book1));
+        for(Book book:Books){
+            book.displayBookInfo();
+        }
+
+        for(Book book:Books){
+            book.displayBookInfo();
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    }
+}
+ /*ArrayList<Account> Accounts=new ArrayList<>();
         //ReadingData(Accounts);
         Account User1=new Account("ahmed1","Hesh5100001!","@","111","1","1",Accounts);
         Account User2=new Account("ahmed2","Hesh5188881@","@","111","1","1",Accounts);
@@ -66,12 +96,8 @@ public class Main {
             catch(PasswordException e){
                 System.out.println(e.getMessage());
             }
-        }*/
-        WritingData(Accounts);
-
-
-    }
-}
+        }
+        WritingData(Accounts);*/
 
 
 

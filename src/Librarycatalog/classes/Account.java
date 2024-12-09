@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.Scanner;
 public abstract class Account implements Serializable {
-    private final String Account_Id;
+    private  String Account_Id;
     private String Username;
     private String Password;
     private String Name;
@@ -18,26 +18,20 @@ public abstract class Account implements Serializable {
     private boolean IsLoggedIn = false;
     public String Account_Type;
     public static int NomOfUsers=0;
-    public Account(String Username,String Password,String Name,String E_mail, String Phone_Number, String Address,ArrayList<Account>Accounts)  {
+    public Account(String Username,String Password,String Name,String E_mail, String Phone_Number, String Address)  {
             this.Username = Username;
-            if(UniquePassword(Password)) {
-                this.Password = Password;
-            }
+            this.Password = Password;
             this.Name = Name;
             this.E_mail = E_mail;
             this.Phone_Number = Phone_Number;
             this.Address = Address;
-            Account_Id = Id_Generator(Accounts);
             NomOfUsers++;
         }
-
-    String Id_Generator(ArrayList<Account> Accounts) {
-        String TempAccountId;
+    void Id_Generator(ArrayList<Account> Accounts) {
         do {
             Random Id = new Random();
-            TempAccountId=String.format("%06d", Id.nextInt(1000000));
-        }while(UniqueAccount_Id(TempAccountId,Accounts));
-        return TempAccountId;
+            Account_Id=String.format("%06d", Id.nextInt(1000000));
+        }while(UniqueAccount_Id(Account_Id,Accounts));
     }
 
     public void LoggIn(String Username, String Password) {
@@ -49,30 +43,39 @@ public abstract class Account implements Serializable {
             System.out.println("Incorrect Username or Password");
         }
     }
-
     public void LogOut(){
         IsLoggedIn=false;
         System.out.println("Logged Out Successfully");
     }
+    public static void setNomOfUsers(int nomOfUsers) {
+        NomOfUsers = nomOfUsers;
+    }
+    public void setAccount_Type(String account_Type) {
+        Account_Type = account_Type;
+    }
+    public void setLoggedIn(boolean loggedIn) {
+        IsLoggedIn = loggedIn;
+    }
+    public void setPassword(String password) {
+        Password = password;
+    }
+    public void setAccount_Id(String account_Id) {
+        Account_Id = account_Id;
+    }
+    public void setName(String name) {
+        Name = name;
+    }
     public void setUsername (String username){
-        if(IsLoggedIn) {
             Username = username;
-        }
     }
         public void setE_mail (String e_mail){
-        if(IsLoggedIn) {
             E_mail = e_mail;
-        }
     }
         public void setPhone_Number (String phone_Number){
-            if(IsLoggedIn) {
                 Phone_Number = phone_Number;
-            }
     }
         public void setAddress (String address){
-            if(IsLoggedIn) {
                 Address = address;
-            }
     }
     public String getUsername () {
         return Username;
@@ -95,7 +98,16 @@ public abstract class Account implements Serializable {
     public String getAccount_Id () {
         return Account_Id;
     }
-   public void Change_Password(String Current_Password,String Changed_Password) {
+    public boolean isLoggedIn() {
+        return IsLoggedIn;
+    }
+    public static int getNomOfUsers() {
+        return NomOfUsers;
+    }
+    public String getAccount_Type() {
+        return Account_Type;
+    }
+    public void Change_Password(String Current_Password, String Changed_Password) {
        Scanner Input = new Scanner(System.in);
        int Try_Counter = 1;
        if (IsLoggedIn) {
@@ -142,7 +154,7 @@ public abstract class Account implements Serializable {
    }
    public void Change_Username( String NewUsername,ArrayList<Account>Accounts){
         if(!Check_Username_Exists(NewUsername,Accounts)){
-            setUsername(NewUsername);
+            Username=NewUsername;
             System.out.println("Username Changed Successfully");
         }
    }
@@ -166,7 +178,6 @@ public abstract class Account implements Serializable {
         }
    }
    public boolean UniqueAccount_Id(String TempAccountId,ArrayList<Account> Accounts){
-
         for(Account account:Accounts){
             if(account.getAccount_Id().equals(TempAccountId)){
                 return true;
@@ -174,16 +185,19 @@ public abstract class Account implements Serializable {
         }
         return false;
    }
-   public void DeleteAccount(ArrayList<Account> Accounts,String Password) {
+   public boolean DeleteAccount(String Password) {
        if (IsLoggedIn) {
-           if (Password.equals(this.Password)) {
-               for (Account account : Accounts) {
-                   if (Password.equals(account.getPassword())) {
-                       Accounts.remove(account);
-                       System.out.println("Account Deleted Successfully");
-                   }
-               }
+           if(this.Password.equals(Password)){
+               return true;
            }
+           else{
+               System.out.println("Incorrect Password");
+               return false;
+           }
+
+       }
+       else{
+           return false;
        }
    }
 }
