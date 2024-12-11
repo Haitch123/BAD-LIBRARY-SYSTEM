@@ -1,29 +1,135 @@
 package Librarycatalog.classes;
-import Librarycatalog.classes.Book;
+import com.sun.jdi.IntegerValue;
+
 import java.util.ArrayList;
 
-public class Administrator extends Account2{
-   public Administrator(String Username,String Password,String Name,String E_mail, String Phone_Number, String Address){
-       super( Username, Password, Name, E_mail,  Phone_Number,  Address);
-       this.Account_Type="Admin";
+public class Administrator extends Account{
+   public Administrator(String Username,String Password,String Name,String E_mail, String Phone_Number, String Address,ArrayList<Account>Users){
+       super( Username, Password, Name, E_mail, Phone_Number, Address,Users);
+       Admin=true;
+    }
+    public Account Add_User(String Username,String Password,String Name,String E_mail, String Phone_Number, String Address,ArrayList<Account> Users){
+       return new Administrator(Username,Password,Name,E_mail, Phone_Number, Address,Users);
+    }
+    public enum Update_User_Option{
+       Username,Password,Name,E_mail,Phone_Number,Address
+    }
+    public void Update_User(String Username,ArrayList<Account> Users,String Update,Update_User_Option Choice){
+       boolean Exists=false;
+       for(Account user:Users){
+           if( user.getUsername().equals(Username)){
+               Exists=true;
+               switch(Choice){
+                   case Username:user.setUsername(Update);
+                   break;
+                   case Password:user.setPassword(Update);
+                   break;
+                   case Name:user.setName(Update);
+                   break;
+                   case E_mail:user.setE_mail(Update);
+                   break;
+                   case Phone_Number:user.setPhone_Number(Update);
+                   break;
+                   case Address:user.setAddress(Update);
+                   break;
+               }
+           }
+       }
+       if(!Exists){
+           System.out.println("User Not Found");
+       }
+    }
+    public void Remove_User(String Username,ArrayList<Account> Users){
+       boolean Exists=false;
+       for(Account user:Users){
+           if(user.getUsername().equals(Username)){
+               Exists=true;
+               Users.remove(user);
+               System.out.println("User Removed Successfully");
+               break;
+           }
+       }
+       if(!Exists){
+           System.out.println("User Not Found");
+       }
+    }
+    public Book Add_Book(String bookId, String title, String author, int publicationYear, String kindOfBook, boolean isAvailable, double price){
+       return new Book(bookId,title,author, publicationYear,kindOfBook,  isAvailable,price);
+    }
+    public enum Update_Book_Option{
+       BookId,BookTitle,BookAuthor,PublicationYear,KindOfBook,Availability,Price
+    }
+    public void Update_Book(String bookId,ArrayList<Book> Books,String Update,Update_Book_Option Choice){
+        boolean Exists=false;
+        for(Book book:Books){
+            if( book.getBookId().equals(bookId)){
+                Exists=true;
+                switch(Choice){
+                    case BookId:book.setBookId(Update);
+                        break;
+                    case BookTitle:book.setTitle(Update);
+                        break;
+                    case BookAuthor:book.setAuthor(Update);
+                        break;
+                    case PublicationYear:book.setPublicationYear(Integer.parseInt(Update));
+                        break;
+                    case KindOfBook:book.setKindOfBook(Update);
+                        break;
+                    case Availability:book.setAvailable(Boolean.parseBoolean(Update));
+                        break;
+                    case Price:book.setPrice(Float.parseFloat(Update));
+                    break;
+                }
+            }
+        }
+        if(!Exists){
+            System.out.println("Book Not Found");
+        }
+    }
+    public void Remove_Book(String BookId,ArrayList<Book> Books){
+        boolean Exists=false;
+        for(Book book:Books){
+            if(book.getBookId().equals(BookId)){
+                Exists=true;
+                Books.remove(book);
+                System.out.println("Book Removed Successfully");
+            }
+        }
+        if(!Exists){
+            System.out.println("Book Not Found");
+        }
+    }
+    public void Display_InventoryStatus(ArrayList<Book> Books){
+       int Available_Books=0;
+       int UnAvailable_Books=0;
+       StringBuilder AvailableBooks=new StringBuilder();
+        StringBuilder UnAvailableBooks=new StringBuilder();
+        for(Book book:Books){
+            if(book.isAvailable()){
+                Available_Books++;
+                AvailableBooks.append(book.getTitle()).append('\n');
+            }
+            else{
+                UnAvailable_Books++;
+                UnAvailableBooks.append(book.getTitle()).append('\n');
+            }
+        }
+        System.out.println("Number Of Available Books: "+ Available_Books);
+        System.out.println("Number Of UnAvailable Books: "+ UnAvailable_Books);
+        if(Available_Books>0){
+            System.out.println("Available Books: ");
+            System.out.println(AvailableBooks.toString());
+        }
+        else{
+            System.out.println("No Available Books");
+        }
+        if(UnAvailable_Books>0){
+            System.out.println("UnAvailable Books: ");
+            System.out.println(UnAvailableBooks.toString());
+        }
+        else{
+            System.out.println("No UnAvailable Books");
+        }
 
-    }
-    public void Add_Book(ArrayList<Book>Books,Book NewBook){
-       Books.add(NewBook);
-    }
-    public void Remove_Book(ArrayList<Book>Books,Book RemovedBook){
-        Books.remove(RemovedBook);
-    }
-    public Administrator Add_User(String Username,String Password,String Name,String E_mail, String Phone_Number, String Address){
-       Administrator NewUser=new Administrator( Username, Password, Name, E_mail,  Phone_Number,  Address);
-       return NewUser;
-    }
-    public boolean Remove_User(String Username,Administrator User){
-       if(Username.equals(User.getUsername())){
-           return true;
-       }
-       else{
-           return false;
-       }
     }
 }

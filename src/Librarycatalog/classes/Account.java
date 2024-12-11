@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.Scanner;
 public abstract class Account implements Serializable {
-    private  String Account_Id;
+    private final String Account_Id;
     private String Username;
     private String Password;
     private String Name;
@@ -16,54 +16,63 @@ public abstract class Account implements Serializable {
     private String Phone_Number;
     private String Address;
     private boolean IsLoggedIn = false;
-    public String Account_Type;
-    public static int NomOfUsers=0;
-    public Account(String Username,String Password,String Name,String E_mail, String Phone_Number, String Address)  {
+    protected boolean Admin=false;
+    private static int NomOfUsers=0;
+    public Account(String Username,String Password,String Name,String E_mail, String Phone_Number, String Address,ArrayList<Account>Accounts)  {
             this.Username = Username;
-            this.Password = Password;
+            if(UniquePassword(Password)) {
+                this.Password = Password;
+            }
             this.Name = Name;
             this.E_mail = E_mail;
             this.Phone_Number = Phone_Number;
             this.Address = Address;
+            Account_Id = Id_Generator(Accounts);
             NomOfUsers++;
         }
-    void Id_Generator(ArrayList<Account> Accounts) {
+
+    String Id_Generator(ArrayList<Account> Accounts) {
+        String TempAccountId;
         do {
             Random Id = new Random();
-            Account_Id=String.format("%06d", Id.nextInt(1000000));
-        }while(UniqueAccount_Id(Account_Id,Accounts));
+            TempAccountId=String.format("%06d", Id.nextInt(1000000));
+        }while(UniqueAccount_Id(TempAccountId,Accounts));
+        return TempAccountId;
     }
 
-    public void LoggIn(String Username, String Password) {
+    public boolean LoggIn(String Username, String Password) {
         if(this.Username.equals(Username) && this.Password.equals(Password)){
             System.out.println("Logged In Successfully");
             IsLoggedIn=true;
+            return true;
         }
         else{
             System.out.println("Incorrect Username or Password");
+            return false;
         }
     }
+
     public void LogOut(){
         IsLoggedIn=false;
         System.out.println("Logged Out Successfully");
     }
-    public static void setNomOfUsers(int nomOfUsers) {
-        NomOfUsers = nomOfUsers;
+
+    public void setPassword(String password) {
+        if(UniquePassword(password)) {
+            Password = password;
+        }
     }
-    public void setAccount_Type(String account_Type) {
-        Account_Type = account_Type;
+    public void setName(String name) {
+        Name = name;
     }
     public void setLoggedIn(boolean loggedIn) {
         IsLoggedIn = loggedIn;
     }
-    public void setPassword(String password) {
-        Password = password;
+    public void setAdmin(boolean admin) {
+        Admin = admin;
     }
-    public void setAccount_Id(String account_Id) {
-        Account_Id = account_Id;
-    }
-    public void setName(String name) {
-        Name = name;
+    public static void setNomOfUsers(int nomOfUsers) {
+        NomOfUsers = nomOfUsers;
     }
     public void setUsername (String username){
             Username = username;
@@ -98,14 +107,8 @@ public abstract class Account implements Serializable {
     public String getAccount_Id () {
         return Account_Id;
     }
-    public boolean isLoggedIn() {
-        return IsLoggedIn;
-    }
     public static int getNomOfUsers() {
         return NomOfUsers;
-    }
-    public String getAccount_Type() {
-        return Account_Type;
     }
     public void Change_Password(String Current_Password, String Changed_Password) {
        Scanner Input = new Scanner(System.in);
@@ -145,20 +148,24 @@ public abstract class Account implements Serializable {
    }
    public void Display_Details(){
         if(IsLoggedIn){
-            System.out.println(Username);
-            System.out.println(Name);
-            System.out.println(E_mail);
-            System.out.println(Phone_Number);
-            System.out.println(Address);
+            System.out.println("Your Username: "+Username);
+            System.out.println("Your Name: "+Name);
+            System.out.println("Your E_mail: "+E_mail);
+            System.out.println("Your Phone_Number: "+Phone_Number);
+            System.out.println("Your Address: "+Address);
+            System.out.println("----------------------------------");
+        }
+        else{
+            System.out.println("You Need To Log In First");
         }
    }
    public void Change_Username( String NewUsername,ArrayList<Account>Accounts){
         if(!Check_Username_Exists(NewUsername,Accounts)){
-            Username=NewUsername;
+            setUsername(NewUsername);
             System.out.println("Username Changed Successfully");
         }
    }
-   boolean Check_Username_Exists(String NewUsername,ArrayList<Account> Accounts){
+   public static boolean Check_Username_Exists(String NewUsername,ArrayList<Account> Accounts){
         boolean Exists=false;
        for (Account account : Accounts) {
            if (NewUsername.equals(account.getUsername())) {
@@ -178,6 +185,7 @@ public abstract class Account implements Serializable {
         }
    }
    public boolean UniqueAccount_Id(String TempAccountId,ArrayList<Account> Accounts){
+
         for(Account account:Accounts){
             if(account.getAccount_Id().equals(TempAccountId)){
                 return true;
@@ -185,19 +193,12 @@ public abstract class Account implements Serializable {
         }
         return false;
    }
-   public boolean DeleteAccount(String Password) {
+   public void DeleteAccount(ArrayList<Account> Accounts,String Password) {
        if (IsLoggedIn) {
-           if(this.Password.equals(Password)){
-               return true;
+           if (Password.equals(this.Password)) {
+               Accounts.remove(this);
+               System.out.println("Account Deleted Successfully");
            }
-           else{
-               System.out.println("Incorrect Password");
-               return false;
-           }
-
-       }
-       else{
-           return false;
        }
    }
 }

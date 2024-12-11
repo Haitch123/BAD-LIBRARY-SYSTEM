@@ -2,11 +2,9 @@ import Librarycatalog.classes.Account;
 import Librarycatalog.classes.Administrator;
 import Librarycatalog.classes.Book;
 import Librarycatalog.classes.PasswordException;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
-
 public class Main {
     public static  void ReadingData(ArrayList<Account> Accounts){
         File file=new File("Details.ser");
@@ -38,50 +36,160 @@ public class Main {
         }
     }
     public static void main(String[] args) throws IOException {
-        ArrayList<Book> Books=new ArrayList();
-        Administrator Admin1=new Administrator("ahmed1","Hesh5100001!","@","111","1","1");
-        Book Book1=new Book("01","The Great Gatspy","Ahmed",2024,"Sci Fi",true,100F);
-        Admin1.Add_Book(Books,Book1);
-        System.out.println(Books.indexOf(Book1));
-        Admin1.Remove_Book(Books,Book1);
-        System.out.println(Books.indexOf(Book1));
-        for(Book book:Books){
-            book.displayBookInfo();
+        ArrayList<Account>Users=new ArrayList<>();
+        ArrayList<Administrator> Admins=new ArrayList<>();
+        ArrayList<Book>Books=new ArrayList<>();
+        Administrator Admin1=new Administrator("Haitch","7112005aA@","Ahmed","@","012","5_Street",Users);
+        Admins.add(Admin1);
+        Account User1=new Administrator("ahmed2","Hesh5188881@","Hesham","111","1","1",Users);
+        Users.add(User1);
+        Scanner Input=new Scanner(System.in);
+        System.out.println("1-Log In"+'\t'+"2-Register");
+        int Choice=Input.nextInt();
+        Input.nextLine();
+        if(Choice==1) {
+            do {
+                for (Administrator admin : Admins) {
+                    System.out.println("Enter Username:");
+                    String username = Input.nextLine();
+                    System.out.println("Enter Password:");
+                    String password = Input.nextLine();
+                    if (!admin.LoggIn(username, password)) {
+                        System.out.println("Try again?" + '\n' + "1-YES" + '\t' + "2-NO");
+                        Choice = Input.nextInt();
+                        Input.nextLine();
+                    } else {
+                        do {
+                            System.out.println("Dashboard");
+                        System.out.println("1-Add User" + '\t' + "2-Update User" + '\t' + "3-Remove User" + '\n'
+                                + "4-Add Book" + '\t' + "5-Update Book" + '\t' + "6-Remove Book");
+                        int Choice2 = Input.nextInt();
+                        Input.nextLine();
+                            switch (Choice2) {
+                                case 1: {
+                                    try {
+                                        System.out.println("Enter User Details" + '\n' + "Username:");
+                                        String NewUsername = Input.nextLine();
+                                        System.out.println("Password:");
+                                        String NewPassword = Input.nextLine();
+                                        System.out.println("Name:");
+                                        String NewName = Input.nextLine();
+                                        System.out.println("E-mail:");
+                                        String NewE_mail = Input.nextLine();
+                                        System.out.println("Phone Number:");
+                                        String NewPhoneNumber = Input.nextLine();
+                                        System.out.println("Address:");
+                                        String NewAddress = Input.nextLine();
+                                        if (!Account.Check_Username_Exists(NewUsername, Users)) {
+                                            Users.add(admin.Add_User(NewUsername, NewPassword, NewName, NewE_mail, NewPhoneNumber, NewAddress, Users));
+                                            System.out.println("User Added Successfully");
+                                        }
+                                    } catch(PasswordException e){
+                                        System.out.println(e.getMessage());
+                                    }
+
+                                        break;
+                                }
+                                case 2:{
+                                    System.out.println("Enter Username OF User You Want TO Update Details" + '\n' + "Username:");
+                                    String Username=Input.nextLine();
+                                    System.out.println("What Do You Want To Update"+'\n'+"1-Username"+'\t'+"2-Name"+'\t'+"3-E-mail"+
+                                            '\n'+"4-Phone Number"+'\t'+"5-Address");
+                                    Choice=Input.nextInt();
+                                    Input.nextLine();
+                                    switch (Choice){
+                                        case 1:{
+                                            System.out.println("New Username: ");
+                                            String NewUsername=Input.nextLine();
+                                            admin.Update_User(Username,Users,NewUsername, Administrator.Update_User_Option.Username);
+                                            break;
+                                        }
+                                    }
+                                }
+                                case 3:{
+                                    System.out.println("Enter Username To Remove User: ");
+                                    String Username=Input.nextLine();
+                                    admin.Remove_User(Username,Users);
+                                    break;
+                                }
+                                case 4:{
+                                    System.out.println("Enter Book Details" + '\n' + "Book ID:");
+                                    String NewBookId = Input.nextLine();
+                                    System.out.println("Title:");
+                                    String NewBookTitle = Input.nextLine();
+                                    System.out.println("Author:");
+                                    String NewBookAuthor = Input.nextLine();
+                                    System.out.println("Publication Year:");
+                                    String NewBookPublicationYear = Input.nextLine();
+                                    System.out.println("Kind OF Book:");
+                                    String NewBookKindOFBook = Input.nextLine();
+                                    System.out.println("Available:");
+                                    String NewBookAvailable = Input.nextLine();
+                                    System.out.println("Price:");
+                                    String NewBookPrice = Input.nextLine();
+                                    Books.add(admin.Add_Book(NewBookId,NewBookTitle,NewBookAuthor,Integer.parseInt(NewBookPublicationYear),NewBookKindOFBook,Boolean.parseBoolean(NewBookAvailable),Float.parseFloat(NewBookPrice)));
+                                    System.out.println("Book Added Successfully");
+
+                                    break;
+                                }
+                                case 6:{
+                                    System.out.println("Enter Book ID To Remove Book: ");
+                                    String BookId=Input.nextLine();
+                                    admin.Remove_Book(BookId,Books);
+                                    break;
+                                }
+                            }
+                            System.out.println("Another Operation:" + '\n' + "1-YES" + '\t' + "2-NO");
+                            Choice = Input.nextInt();
+                            Input.nextLine();
+                        }while(Choice==1);
+                    }
+                }
+            } while (Choice == 1);
         }
 
-        for(Book book:Books){
-            book.displayBookInfo();
-        }
 
 
 
 
 
-
-
-
-
-
-
-
-
-    }
-}
- /*ArrayList<Account> Accounts=new ArrayList<>();
+        /*ArrayList<Account> Accounts=new ArrayList<>();
+        ArrayList<Book> Books=new ArrayList<>();
         //ReadingData(Accounts);
-        Account User1=new Account("ahmed1","Hesh5100001!","@","111","1","1",Accounts);
-        Account User2=new Account("ahmed2","Hesh5188881@","@","111","1","1",Accounts);
-        Account User3=new Account("ahmed3","Hesh5154441@","@","111","1","1",Accounts);
-        Account User4=new Account("ahmed4","Hesh516712@","@","111","1","1",Accounts);
+        Administrator User1=new Administrator("ahmed1","Hesh5100001!","Ahmed","111","1","1",Accounts);
+        Administrator User2=new Administrator("ahmed2","Hesh5188881@","Hesham","111","1","1",Accounts);
+        Administrator User3=new Administrator("ahmed3","Hesh5154441@","Mohamed","111","1","1",Accounts);
+        Administrator User4=new Administrator("ahmed4","Hesh516712@","Zaki","111","1","1",Accounts);
         Accounts.add(User1);
         Accounts.add(User2);
         Accounts.add(User3);
         Accounts.add(User4);
         Accounts.get(0).LoggIn("ahmed1","Hesh5100001!");
         Accounts.get(0).Display_Details();
+        System.out.println(Account.getNomOfUsers());
+        try{
+        Accounts.add(User1.Add_User("ahmed4","Hesh516712@","Zaki","111","1","1",Accounts));
+        Accounts.get(4).LoggIn("ahmed4","Hesh516712@");
+        Accounts.get(4).Display_Details();
+        }catch (PasswordException e){
+            System.out.println(e.getMessage());
+        }
+        try {
+            User1.Update_User("ahmed4", Accounts, "HITCH", Administrator.Update_User_Option.Name);
+            Accounts.get(4).Display_Details();
+        }catch(PasswordException e){
+            System.out.println(e.getMessage());
+        }
+        Books.add(User1.Add_Book("01","The Great Gatspy","Ahmed",2024,"Sci fi",true,24F));
+        Books.add(User1.Add_Book("02","Fuck","Ahmed",2024,"Sci fi",false,24F));
+        Books.get(0).displayBookInfo();
+    User1.Update_Book("01",Books,"50", Administrator.Update_Book_Option.Price);
+        Books.get(0).displayBookInfo();
+        User1.Remove_User("ahm",Accounts);
+        Accounts.get(4).Display_Details();
 
-        Accounts.get(0).Display_Details();
 
+        User1.Display_InventoryStatus(Books);*/
 
         /*for(Account account:Accounts) {
             System.out.println(account.getAccount_Id());
@@ -96,8 +204,12 @@ public class Main {
             catch(PasswordException e){
                 System.out.println(e.getMessage());
             }
-        }
-        WritingData(Accounts);*/
+        }*/
+        //WritingData(Accounts);
+
+
+    }
+}
 
 
 
