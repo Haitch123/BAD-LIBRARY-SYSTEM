@@ -36,7 +36,7 @@ public class Main {
         }
     }
     public static void main(String[] args) throws IOException {
-        ArrayList<Account>Users=new ArrayList<>();
+        /*ArrayList<Account>Users=new ArrayList<>();
         ArrayList<Administrator> Admins=new ArrayList<>();
         ArrayList<Book>Books=new ArrayList<>();
         Administrator Admin1=new Administrator("Haitch","7112005aA@","Ahmed","@","012","5_Street",Users);

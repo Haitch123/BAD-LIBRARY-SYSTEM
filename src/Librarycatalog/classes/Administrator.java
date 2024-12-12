@@ -1,18 +1,19 @@
 package Librarycatalog.classes;
 import com.sun.jdi.IntegerValue;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Administrator extends Account{
-   public Administrator(String Username,String Password,String Name,String E_mail, String Phone_Number, String Address,ArrayList<Account>Users){
+public class Administrator extends Account implements Serializable {
+   public Administrator(String Username,String Password,String Name,String E_mail, String Phone_Number, String Address,ArrayList<Customer>Users){
        super( Username, Password, Name, E_mail, Phone_Number, Address,Users);
        Admin=true;
     }
-    public Account Add_User(String Username,String Password,String Name,String E_mail, String Phone_Number, String Address,ArrayList<Account> Users){
+    public Account Add_User(String Username,String Password,String Name,String E_mail, String Phone_Number, String Address,ArrayList<Customer> Users){
        return new Administrator(Username,Password,Name,E_mail, Phone_Number, Address,Users);
     }
     public enum Update_User_Option{
-       Username,Password,Name,E_mail,Phone_Number,Address
+       Username,Name,E_mail,Phone_Number,Address
     }
     public void Update_User(String Username,ArrayList<Account> Users,String Update,Update_User_Option Choice){
        boolean Exists=false;
@@ -21,8 +22,6 @@ public class Administrator extends Account{
                Exists=true;
                switch(Choice){
                    case Username:user.setUsername(Update);
-                   break;
-                   case Password:user.setPassword(Update);
                    break;
                    case Name:user.setName(Update);
                    break;
@@ -53,8 +52,8 @@ public class Administrator extends Account{
            System.out.println("User Not Found");
        }
     }
-    public Book Add_Book(String bookId, String title, String author, int publicationYear, String kindOfBook, boolean isAvailable, double price){
-       return new Book(bookId,title,author, publicationYear,kindOfBook,  isAvailable,price);
+    public Book Add_Book( String title, String author, int publicationYear, boolean isAvailable, double price,String Category,int Stock){
+       return new Book( title, author, publicationYear, isAvailable,  price, Category,Stock);
     }
     public enum Update_Book_Option{
        BookId,BookTitle,BookAuthor,PublicationYear,KindOfBook,Availability,Price
@@ -65,15 +64,13 @@ public class Administrator extends Account{
             if( book.getBookId().equals(bookId)){
                 Exists=true;
                 switch(Choice){
-                    case BookId:book.setBookId(Update);
-                        break;
                     case BookTitle:book.setTitle(Update);
                         break;
                     case BookAuthor:book.setAuthor(Update);
                         break;
                     case PublicationYear:book.setPublicationYear(Integer.parseInt(Update));
                         break;
-                    case KindOfBook:book.setKindOfBook(Update);
+                    case KindOfBook:book.setCategory(Update);
                         break;
                     case Availability:book.setAvailable(Boolean.parseBoolean(Update));
                         break;

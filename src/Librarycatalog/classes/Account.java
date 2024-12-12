@@ -18,7 +18,7 @@ public abstract class Account implements Serializable {
     private boolean IsLoggedIn = false;
     protected boolean Admin=false;
     private static int NomOfUsers=0;
-    public Account(String Username,String Password,String Name,String E_mail, String Phone_Number, String Address,ArrayList<Account>Accounts)  {
+    public Account(String Username,String Password,String Name,String E_mail, String Phone_Number, String Address,ArrayList<Customer>Accounts)  {
             this.Username = Username;
             if(UniquePassword(Password)) {
                 this.Password = Password;
@@ -31,7 +31,7 @@ public abstract class Account implements Serializable {
             NomOfUsers++;
         }
 
-    String Id_Generator(ArrayList<Account> Accounts) {
+    String Id_Generator(ArrayList<Customer> Accounts) {
         String TempAccountId;
         do {
             Random Id = new Random();
@@ -184,9 +184,9 @@ public abstract class Account implements Serializable {
             throw new PasswordException();
         }
    }
-   public boolean UniqueAccount_Id(String TempAccountId,ArrayList<Account> Accounts){
+   public boolean UniqueAccount_Id(String TempAccountId,ArrayList<Customer> Accounts){
 
-        for(Account account:Accounts){
+        for(Customer account:Accounts){
             if(account.getAccount_Id().equals(TempAccountId)){
                 return true;
             }
